@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Immeubles{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Liste des immeubles</h3>
+                </div>
+                <div class="box-body">
+                    <table id="listTable" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Adresse</th>
+                            <th>Aperçu</th>
+                            <th>Nombre de logements</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for building in buildings %}
+                            <tr>
+                                <td style="vertical-align: middle;">
+                                    {{ building.address.address1 }}<br />
+                                    {{ building.address.address2 }}<br />
+                                    {{ building.address.zip }} {{ building.address.city }}
+                                </td>
+                                <td>
+                                    <img class="sview" style="width:300px;height:100px;" data-address="{{ building.address.toGeoCoderString }}" />
+                                </td>
+                                <td style="vertical-align: middle;">{{ building.housings|length }}</td>
+                                <td style="vertical-align: middle;">
+                                    <a href="{{ path('building_show', { 'id': building.id }) }}" class="btn btn-default">
+                                        <i class="fa fa-eye"></i> Voir
+                                    </a>
+                                    <a href="{{ path('building_edit', { 'id': building.id }) }}" class="btn btn-info">
+                                        <i class="fa fa-pencil"></i> Modifier
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-footer">
+                    <a href="{{ path('building_new') }}" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> Ajouter un immeuble
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script async defer src="https://maps.googleapis
+.com/maps/api/js?key=AIzaSyDrl2jLtRj6gH7mNjm7KQHYYnJGT2jjo_o&callback=geocode"></script>
+    <script>
+        $(function() {
+            $('#listTable').DataTable();
+        });
+
+        function geocode() {
+            var geocoder = new google.maps.Geocoder();
+            $('.sview').each(function() {
+                var $this = $(this);
+                geocoder.geocode({address: $this.data('address')}, function (result, status) {
+                    if (status === 'OK') {
+                        $this.attr('src', 'https://maps.googleapis' +
+                            '.com/maps/api/streetview?key=AIzaSyDrl2jLtRj6gH7mNjm7KQHYYnJGT2jjo_o&size=300x100&location=' +
+                            result[0].geometry.location.lat() + "," + result[0].geometry.location.lng() +
+                            "&fov=90&heading=235&pitch=10");
+                    }
+                });
+            });
+        }
+    </script>
+{% endblock %}

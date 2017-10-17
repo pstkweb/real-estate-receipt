@@ -1,0 +1,14 @@
+@import '~bootstrap-sass/assets/stylesheets/bootstrap';
+@import '~font-awesome/scss/font-awesome';
+
+#appbundle_company_address, #appbundle_building_address {
+  margin-left: 3rem;
+}
+
+.treeview ul.list-group {
+  margin-bottom: 0;
+}
+
+.treeview ul.list-group .list-group-item + .list-group-item {
+  border-top: 1px solid #DDDDDD;
+}

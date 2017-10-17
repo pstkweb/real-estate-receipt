@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Générer des quittances</h3>
+                </div>
+                <div class="box-body">
+                    {{ form_start(form) }}
+                        {{ form_widget(form.month) }}
+                        {{ form_widget(form.year) }}
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-print"></i> Imprimer
+                        </button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Biens</h3>
+                </div>
+                <div class="box-body no-padding">
+                    <div id="tree"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Liste des quittances</h3>
+                </div>
+                <div class="box-body ajax-dest">
+                    <p class="text-center text-muted">Sélectionnez un élément dans la liste ci-contre.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    $(function() {
+        $('#tree').treeview({
+            data: {{ json|raw }},
+            showBorder: false,
+            onNodeSelected: function (event, data) {
+                $.ajax('/ajax/' + data.id, {method: 'POST'})
+                    .always(function () {
+                        $('.ajax-dest').first()
+                            .empty();
+                    })
+                    .done(function (data) {
+                        $('.ajax-dest').first().html(data);
+                    })
+                    .fail(function () {
+                        $('.ajax-dest').first().html('<p class="text-danger text-center">Une erreur est survenue.</p>');
+                    });
+            }
+        });
+
+        $('form[name="{{ form.vars.id }}"]').on('submit', function (e) {
+            e.preventDefault();
+
+            var $data = $(this).serialize();
+            $.ajax('{{ path('dashboard_ajax_gen') }}', {method: 'POST', data: $data})
+                .done(function (data) {
+                    $.each(data, function (i, val) {
+                        window.open(val).print();
+                    });
+                });
+
+            return false;
+        })
+    });
+</script>
+{% endblock %}

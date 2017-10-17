@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-warning">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Ajout d'un locataire</h3>
+                </div>
+                <div class="box-body">
+                    {{ form_start(form) }}
+                        {{ form_widget(form) }}
+                        <input type="submit" class="btn btn-primary" value="Créer" />
+                    {{ form_end(form) }}
+                </div>
+                <div class="box-footer">
+                    <a href="{{ path('tenant_index') }}" class="btn btn-default">
+                        <i class="fa fa-angle-left"></i> Retourner à la liste
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

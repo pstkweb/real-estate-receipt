@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+
+        <title>{% block title %}Welcome!{% endblock %}</title>
+
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('build/global.css') }}" />
+        <link rel="stylesheet" href="{{ asset('build/adminlte.css') }}" />
+        <link rel="stylesheet" href="{{ asset('build/adminlte-skin.css') }}" />
+        <link rel="stylesheet" href="{{ asset('build/requires.css') }}" />
+        {% endblock %}
+    </head>
+    <body class="skin-black-light">
+        <div class="wrapper">
+            <header class="main-header">
+                <a href="" class="logo">
+                    <span class="logo-mini">Quit.</span>
+                    <span class="logo-lg">Quittances</span>
+                </a>
+                <nav class="navbar navbar-static-top" role="navigation">
+                    <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                        <span class="sr-only">Afficher/Masquer le menu</span>
+                    </a>
+                </nav>
+            </header>
+            <aside class="main-sidebar">
+                <section class="sidebar">
+                    {{ knp_menu_render('AppBundle:Builder:mainMenu', {currentClass: 'active'}) }}
+                </section>
+            </aside>
+            <div class="content-wrapper">
+                <section class="content-header">
+                    {% block bodyHead %}{% endblock %}
+                </section>
+                <section class="content">
+                    {% block body %}{% endblock %}
+                </section>
+            </div>
+        </div>
+
+        {% block javascripts %}
+        <script type="text/javascript" src="{{ asset('build/requires.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('build/adminlte-js.js') }}"></script>
+        {% endblock %}
+    </body>
+</html>

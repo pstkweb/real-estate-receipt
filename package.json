@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "@symfony/webpack-encore": "^0.15.1",
+    "bootstrap-sass": "^3.3.7",
+    "jquery": "^3.2.1",
+    "node-sass": "^4.5.3",
+    "sass-loader": "^6.0.6"
+  },
+  "dependencies": {
+    "datatables.net": "^1.10.16",
+    "datatables.net-bs": "^1.10.16",
+    "font-awesome": "^4.7.0"
+  }
+}

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Modifier l'immeuble &laquo;{{ building.address.address1 }}&raquo;</h3>
+                </div>
+                <div class="box-body">
+                    {{ form_start(edit_form) }}
+                    {{ form_widget(edit_form) }}
+                    <input type="submit" class="btn btn-primary" value="Modifier" />
+                    {{ form_end(edit_form) }}
+                </div>
+                <div class="box-footer">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="{{ path('building_index') }}" class="btn btn-default">
+                                <i class="fa fa-angle-left"></i> Retourner à la liste
+                            </a>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="pull-right">
+                                {{ form_start(delete_form) }}
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa fa-minus"></i> Supprimer
+                                </button>
+                                {{ form_end(delete_form) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

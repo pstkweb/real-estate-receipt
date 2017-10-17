@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Immeuble {{ building.address.address1 }}{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Immeuble &laquo;{{ building.address.address1 }}&raquo;</h3>
+                </div>
+                <div class="box-body">
+                    {% if map is defined %}
+                        {{ ivory_google_map(map) }}
+                        {{ ivory_google_api([map]) }}
+                    {% endif %}
+                    {% if building.housings|length %}
+                    <dl>
+                        {% for housing in building.housings %}
+                        <dt>{{ housing.name }}</dt>
+                        <dd>voir - editer</dd>
+                        {% endfor %}
+                    </dl>
+                    {% endif %}
+                </div>
+                <div class="box-footer">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="{{ path('building_index') }}" class="btn btn-default">
+                                <i class="fa fa-angle-left"></i> Retourner à la liste
+                            </a>
+                            <a href="{{ path('building_edit', { 'id': building.id }) }}" class="btn btn-info">
+                                <i class="fa fa-pencil"></i> Modifier
+                            </a>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="pull-right">
+                                {{ form_start(delete_form) }}
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa fa-minus"></i> Supprimer
+                                </button>
+                                {{ form_end(delete_form) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

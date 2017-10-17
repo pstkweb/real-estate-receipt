@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sociétés{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Liste des sociétés</h3>
+                </div>
+                <div class="box-body">
+                    <table id="listTable" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Adresse</th>
+                            <th>Aperçu</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for company in companies %}
+                            <tr>
+                                <td style="vertical-align: middle;">{{ company.name }}</td>
+                                <td style="vertical-align: middle;">
+                                    {{ company.address.address1 }}<br />
+                                    {{ company.address.address2 }}<br />
+                                    {{ company.address.zip }} {{ company.address.city }}
+                                </td>
+                                <td>
+                                    <img class="sview" style="width:300px;height:100px;" data-address="{{ company.address.toGeoCoderString }}" />
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    <a href="{{ path('company_show', { 'id': company.id }) }}" class="btn btn-default">
+                                        <i class="fa fa-eye"></i> Voir
+                                    </a>
+                                    <a href="{{ path('company_edit', { 'id': company.id }) }}" class="btn btn-info">
+                                        <i class="fa fa-pencil"></i> Modifier
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-footer">
+                    <a href="{{ path('company_new') }}" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> Ajouter une société
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script async defer src="https://maps.googleapis
+.com/maps/api/js?key=AIzaSyDrl2jLtRj6gH7mNjm7KQHYYnJGT2jjo_o&callback=geocode"></script>
+<script>
+    $(function() {
+        $('#listTable').DataTable();
+    });
+
+    function geocode() {
+        var geocoder = new google.maps.Geocoder();
+        $('.sview').each(function() {
+            var $this = $(this);
+            geocoder.geocode({address: $this.data('address')}, function (result, status) {
+                if (status === 'OK') {
+                    $this.attr('src', 'https://maps.googleapis' +
+                        '.com/maps/api/streetview?key=AIzaSyDrl2jLtRj6gH7mNjm7KQHYYnJGT2jjo_o&size=300x100&location=' +
+                        result[0].geometry.location.lat() + "," + result[0].geometry.location.lng() +
+                        "&fov=90&heading=235&pitch=10");
+                }
+            });
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+
+        <title>Quittance</title>
+        <style>
+            html, body {
+                width: 210mm;
+                height: 297mm;
+                font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+            }
+
+            #sender {
+                width: 98mm;
+                height: 33mm;
+                padding: 1mm;
+            }
+
+            #recipient {
+                position: absolute;
+                top: 50mm;
+                left: 110mm;
+                width: 88mm;
+                height: 33mm;
+                padding: 1mm;
+            }
+
+            #content {
+                width: 210mm;
+                position: absolute;
+                top: 110mm;
+                left: 0;
+                padding: 3mm;
+            }
+
+            #content h2 {
+                text-align: center;
+                text-transform: uppercase;
+            }
+
+            #content table {
+                border: 1px solid black;
+                width: 70%;
+                margin-left:15%;
+            }
+
+            #content td + td, #content th + th {
+                border-left: 1px solid black;
+            }
+
+            #content td + td {
+                text-align: center;
+            }
+
+            #content td:first-child {
+                text-transform: uppercase;
+            }
+
+            #content tbody tr:first-child td {
+                border-top: 1px solid black;
+            }
+
+            #content tbody tr:last-child td {
+                border-bottom: 1px solid black;
+            }
+
+            #content tfoot tr + tr td, #content tfoot tr + tr th {
+                border-top: 1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+    {% if receipt and receipt.tenant and receipt.housing and receipt.housing.building and receipt.housing.building.company %}
+        <div id="sender">
+            {{ receipt.housing.building.company.name }}<br />
+            {{ receipt.housing.building.company.address.address1 }}<br />
+            {%- if receipt.housing.building.company.address.address2 -%}
+                {{ receipt.housing.building.company.address.address2 }}<br />
+            {%- endif -%}
+            {{ receipt.housing.building.company.address.zip }} {{ receipt.housing.building.company.address.city }}
+        </div>
+        <div id="recipient">
+            {{ receipt.tenant.lastName }} {{ receipt.tenant.firstName }}<br />
+            {%- if receipt.housing.name -%}
+                {{ receipt.housing.name }}
+            {%- endif -%}
+            {{ receipt.housing.building.address.address1 }}<br />
+            {%- if receipt.housing.building.address.address2 -%}
+                {{ receipt.housing.building.address.address2 }}<br />
+            {%- endif -%}
+            {{ receipt.housing.building.address.zip }} {{ receipt.housing.building.address.city }}
+        </div>
+        <div id="content">
+            <h2>Quittance de loyer</h2>
+             <table cellspacing="0" cellpadding="5">
+                 <thead>
+                 <tr>
+                     <th>Période du 01.{{ date|date('m.y') }} au {{ date|date('t.m.y') }}</th>
+                     <th>Thomas Triboult</th>
+                 </tr>
+                 </thead>
+                 <tbody>
+                 <tr>
+                     <td>Loyer</td>
+                     <td>{{ receipt.housing.rent }}</td>
+                 </tr>
+                 <tr>
+                     <td>Provision sur charges (ordures ménagères)</td>
+                     <td>{{ receipt.housing.costs }}</td>
+                 </tr>
+                 </tbody>
+                 <tfoot>
+                 <tr>
+                     <td>Total</td>
+                     <td>{{ receipt.housing.total }}</td>
+                 </tr>
+                 </tfoot>
+             </table>
+            <h2>Avis d'échéance</h2>
+            <table cellspacing="0" cellpadding="5">
+                <thead>
+                <tr>
+                    <th>Période du 01.{{ date|date_modify('+1 month')|date('m.y') }} au {{ date|date_modify('+1 month')|date('t.m.y') }}</th>
+                    <th>Débit</th>
+                    <th>Crédit</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Loyer</td>
+                    <td>{{ receipt.housing.rent }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Provision sur charges</td>
+                    <td>{{ receipt.housing.costs }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>{{ receipt.housing.total }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><u>Relevé de comptes</u></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Quittance 12/2017</td>
+                    <td>{{ receipt.housing.total }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Règlement</td>
+                    <td></td>
+                    <td>{{ receipt.housing.total }}</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td>Sous-total</td>
+                    <td>{{ receipt.housing.total * 2 }}</td>
+                    <td>{{ receipt.housing.total }}</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>{{ receipt.housing.total }}</td>
+                    <td></td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    {% else %}
+        <h1>Aucune quittance imprimable</h1>
+    {% endif %}
+    </body>
+</html>

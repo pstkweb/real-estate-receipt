@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Logement {{ housing.name }} - {{ housing.building.address.address1 }}{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        Logement &laquo;{{ housing.name }} - {{ housing.building.address.address1 }}&raquo;
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <dl>
+                        <dt>Nom</dt>
+                        <dd>{{ housing.name }}</dd>
+                        <dt>Immeuble</dt>
+                        <dd>{{ housing.building.address.address1 }}</dd>
+                        <dt>Loyer</dt>
+                        <dd>{{ housing.rent }}</dd>
+                        <dt>Charges</dt>
+                        <dd>{{ housing.costs }}</dd>
+                        <dt>Locataire</dt>
+                        <dd>
+                            {%- if housing.tenant -%}
+                                {{ housing.tenant.lastName }} {{ housing.tenant.firstName }}
+                            {%- else -%}
+                                Aucun locataire
+                            {%- endif -%}
+                        </dd>
+                    </dl>
+                    {% if housing.receipts|length %}
+                        <table id="listTable" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for receipt in housing.receipts %}
+                                <tr>
+                                    <td>{{ receipt.date|date('m/Y') }}</td>
+                                    <td><a href="#" class="btn btn-primary"><i class="fa fa-download"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+                <div class="box-footer">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="{{ path('housing_index') }}" class="btn btn-default">
+                                <i class="fa fa-angle-left"></i> Retourner à la liste
+                            </a>
+                            <a href="{{ path('housing_edit', { 'id': housing.id }) }}" class="btn btn-info">
+                                <i class="fa fa-pencil"></i> Modifier
+                            </a>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="pull-right">
+                                {{ form_start(delete_form) }}
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa fa-minus"></i> Supprimer
+                                </button>
+                                {{ form_end(delete_form) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(function() {
+            $('#listTable').DataTable();
+        });
+    </script>
+{% endblock %}

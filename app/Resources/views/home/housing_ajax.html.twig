@@ -1,0 +1,30 @@
+<table id="listTable" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Locataire</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for receipt in receipts %}
+        <tr>
+            <td>{{ receipt.date|date('m/Y') }}</td>
+            <td>
+                {{ receipt.tenant.lastName|upper }} {{ receipt.tenant.firstName }}
+            </td>
+            <td>
+                <a href="javascript: window.open('{{ path('receipt_print', { 'receipt': receipt.id }) }}').print();"
+                   class="btn btn-primary">
+                    <i class="fa fa-print"></i> Imprimer
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<script>
+    $(function () {
+        $('#listTable').DataTable();
+    });
+</script>
